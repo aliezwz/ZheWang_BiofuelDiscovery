@@ -25,12 +25,6 @@ def print_time(start, end, task_name):
 # 开始计时加载数据集
 start_time = time.time()
 
-# 从MolNet下载
-# 尝试tox21或LIPO数据集
-tasks, datasets, transformers = dc.molnet.load_tox21()
-end_time = time.time()
-print_time(start_time, end_time, "加载Tox21数据集")
-
 # 读取SMILES数据
 start_time = time.time()
 df = pd.read_csv("../Dataset/Smiles list.csv")
@@ -88,7 +82,7 @@ print_time(start_time, end_time, "训练GAN")
 
 # 生成数据
 start_time = time.time()
-generated_data = gan.predict_gan_generator(100000)
+generated_data = gan.predict_gan_generator(500000)
 end_time = time.time()
 print_time(start_time, end_time, "生成数据")
 
