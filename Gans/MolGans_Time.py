@@ -82,7 +82,7 @@ print_time(start_time, end_time, "训练GAN")
 
 # 生成数据
 start_time = time.time()
-generated_data = gan.predict_gan_generator(1000000)
+generated_data = gan.predict_gan_generator(100000)
 end_time = time.time()
 print_time(start_time, end_time, "生成数据")
 
@@ -94,18 +94,28 @@ print("{} 个分子生成".format(len(nmols)))
 
 nmols = list(filter(lambda x: x is not None, nmols))
 
-# 当前训练不稳定，因此0是常见结果
 print("{} 个有效分子".format(len(nmols)))
+
+# 初始化保存 SMILES 的列表
+generated_smiles_list = []
 
 nmols_smiles = [Chem.MolToSmiles(m) for m in nmols]
 nmols_smiles_unique = list(OrderedDict.fromkeys(nmols_smiles))
 nmols_viz = [Chem.MolFromSmiles(x) for x in nmols_smiles_unique]
 print("{} 个独特有效分子".format(len(nmols_viz)))
 
+# 将生成的SMILES添加到列表中
+generated_smiles_list.extend(nmols_smiles_unique)
+
 # 打印生成的SMILES
 print("生成的SMILES:")
 for smiles in nmols_smiles_unique:
     print(smiles)
+
+# 保存生成的SMILES到文件
+with open('generated_smiles.txt', 'w') as f:
+    for smiles in generated_smiles_list:
+        f.write(f"{smiles}\n")
 
 # 生成图像
 start_time = time.time()

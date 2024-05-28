@@ -6,7 +6,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import RFE
 from sklearn.metrics import accuracy_score
 
-data = pd.read_csv("Orignal Dataset.csv")
+data = pd.read_csv("Dataset/Dataset.csv")
+print(data.head())
 
 X = data.drop(["Name", "Smile", "CAS Number", "Type"], axis = 1)
 y = data["Type"]
