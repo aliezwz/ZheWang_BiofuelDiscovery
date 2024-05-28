@@ -6,6 +6,7 @@ deepchem.__version__
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import time
 import os
 from collections import OrderedDict
 
@@ -24,7 +25,7 @@ from deepchem.feat.molecule_featurizers.molgan_featurizer import GraphMatrix
 # Download from MolNet
 # Try tox21 or LIPO dataset
 tasks, datasets, transformers = dc.molnet.load_tox21()
-df = pd.read_csv("Smiles list.csv")
+df = pd.read_csv("../Dataset/Smiles list.csv")
 
 num_atoms = 12
 print(df)
@@ -72,6 +73,11 @@ nmols_smiles = [Chem.MolToSmiles(m) for m in nmols]
 nmols_smiles_unique = list(OrderedDict.fromkeys(nmols_smiles))
 nmols_viz = [Chem.MolFromSmiles(x) for x in nmols_smiles_unique]
 print ("{} unique valid molecules".format(len(nmols_viz)))
+
+# Print Generated SMILES
+print("Generated SMILES:")
+for smiles in nmols_smiles_unique:
+    print(smiles)
 
 # Generate image
 img = Draw.MolsToGridImage(nmols_viz[0:100], molsPerRow=5, subImgSize=(250, 250), maxMols=100, legends=None, returnPNG=False)

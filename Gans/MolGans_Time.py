@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os
 from collections import OrderedDict
-import time  # 导入time模块
+import time
 
 import deepchem as dc
 import deepchem.models
@@ -33,7 +33,7 @@ print_time(start_time, end_time, "加载Tox21数据集")
 
 # 读取SMILES数据
 start_time = time.time()
-df = pd.read_csv("Smiles list.csv")
+df = pd.read_csv("../Dataset/Smiles list.csv")
 end_time = time.time()
 print_time(start_time, end_time, "读取SMILES列表")
 
