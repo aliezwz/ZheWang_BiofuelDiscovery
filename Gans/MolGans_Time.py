@@ -74,17 +74,21 @@ def iterbatches(epochs):
             node_tensor = one_hot(batch[1], gan.nodes)
             yield {gan.data_inputs[0]: adjacency_tensor, gan.data_inputs[1]: node_tensor}
 
+
+
 # 训练GAN
 start_time = time.time()
 gan.fit_gan(iterbatches(50), generator_steps=0.2, checkpoint_interval=5000)
+time.sleep(20)
 end_time = time.time()
 print_time(start_time, end_time, "训练GAN")
 
 # 生成数据
 start_time = time.time()
-generated_data = gan.predict_gan_generator(100000)
+generated_data = gan.predict_gan_generator(1000000)
 end_time = time.time()
 print_time(start_time, end_time, "生成数据")
+time.sleep(10)
 
 start_time = time.time()
 nmols = feat.defeaturize(generated_data)
