@@ -31,7 +31,7 @@ df = pd.read_csv("../Dataset/Smiles list.csv")
 end_time = time.time()
 print_time(start_time, end_time, "读取SMILES列表")
 
-num_atoms = 12
+num_atoms = 15
 print(df)
 
 # data = df[['smiles']].sample(4000, random_state=42)
@@ -85,7 +85,7 @@ print_time(start_time, end_time, "训练GAN")
 
 # 生成数据
 start_time = time.time()
-generated_data = gan.predict_gan_generator(1000000)
+generated_data = gan.predict_gan_generator(10000)
 end_time = time.time()
 print_time(start_time, end_time, "生成数据")
 time.sleep(10)
