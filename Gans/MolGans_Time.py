@@ -85,7 +85,7 @@ print_time(start_time, end_time, "训练GAN")
 
 # 生成数据
 start_time = time.time()
-generated_data = gan.predict_gan_generator(10000)
+generated_data = gan.predict_gan_generator(1000000)
 end_time = time.time()
 print_time(start_time, end_time, "生成数据")
 time.sleep(10)
