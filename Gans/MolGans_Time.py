@@ -117,7 +117,7 @@ for smiles in nmols_smiles_unique:
     print(smiles)
 
 # 保存生成的SMILES到文件
-with open('generated_smiles.txt', 'w') as f:
+with open('generated_smiles_epoches=100.txt', 'w') as f:
     for smiles in generated_smiles_list:
         f.write(f"{smiles}\n")
 
