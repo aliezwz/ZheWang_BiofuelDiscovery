@@ -78,7 +78,7 @@ def iterbatches(epochs):
 
 # 训练GAN
 start_time = time.time()
-gan.fit_gan(iterbatches(25), generator_steps=0.2, checkpoint_interval=5000)
+gan.fit_gan(iterbatches(25), generator_steps=0.5, checkpoint_interval=5000)
 time.sleep(20)
 end_time = time.time()
 print_time(start_time, end_time, "训练GAN")
