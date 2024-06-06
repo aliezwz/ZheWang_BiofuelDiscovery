@@ -22,14 +22,11 @@ from deepchem.feat.molecule_featurizers.molgan_featurizer import GraphMatrix
 def print_time(start, end, task_name):
     print(f"{task_name} 用了 {end - start:.2f} 秒")
 
+# 记录总运行时间的开始时间
+total_start_time = time.time()
+
 # 开始计时加载数据集
 start_time = time.time()
-
-# 从MolNet下载
-# 尝试tox21或LIPO数据集
-tasks, datasets, transformers = dc.molnet.load_tox21()
-end_time = time.time()
-print_time(start_time, end_time, "加载Tox21数据集")
 
 # 读取SMILES数据
 start_time = time.time()
@@ -81,10 +78,8 @@ def iterbatches(epochs):
             yield {gan.data_inputs[0]: adjacency_tensor, gan.data_inputs[1]: node_tensor}
 
 # 训练GAN
-start_time = time.time()
-gan.fit_gan(iterbatches(25), generator_steps=0.2, checkpoint_interval=5000)
-end_time = time.time()
-print_time(start_time, end_time, "训练GAN")
+gan.fit_gan(iterbatches(50), generator_steps=0.2, checkpoint_interval=5000)
+
 
 # 生成数据
 start_time = time.time()
@@ -100,18 +95,34 @@ print("{} 个分子生成".format(len(nmols)))
 
 nmols = list(filter(lambda x: x is not None, nmols))
 
-# 当前训练不稳定，因此0是常见结果
 print("{} 个有效分子".format(len(nmols)))
+
+# 初始化保存 SMILES 的列表
+generated_smiles_list = []
+
+# 读取之前生成的SMILES，如果存在
+if os.path.exists('generated_smiles.txt'):
+    with open('generated_smiles.txt', 'r') as f:
+        generated_smiles_list = [line.strip() for line in f]
 
 nmols_smiles = [Chem.MolToSmiles(m) for m in nmols]
 nmols_smiles_unique = list(OrderedDict.fromkeys(nmols_smiles))
 nmols_viz = [Chem.MolFromSmiles(x) for x in nmols_smiles_unique]
 print("{} 个独特有效分子".format(len(nmols_viz)))
 
+# 将生成的SMILES添加到列表中，去除重复
+generated_smiles_list.extend(nmols_smiles_unique)
+generated_smiles_list = list(OrderedDict.fromkeys(generated_smiles_list))
+
 # 打印生成的SMILES
 print("生成的SMILES:")
-for smiles in nmols_smiles_unique:
+for smiles in generated_smiles_list:
     print(smiles)
+
+# 保存生成的SMILES到文件
+with open('generated_smiles.txt', 'w') as f:
+    for smiles in generated_smiles_list:
+        f.write(f"{smiles}\n")
 
 # 生成图像
 start_time = time.time()
@@ -124,3 +135,7 @@ plt.figure(figsize=(12, 12))
 plt.imshow(img)
 plt.axis('off')
 plt.show()
+
+# 记录总运行时间的结束时间
+total_end_time = time.time()
+print_time(total_start_time, total_end_time, "总运行时间")

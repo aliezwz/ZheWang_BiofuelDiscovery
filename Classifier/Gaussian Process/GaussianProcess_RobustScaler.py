@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import RobustScaler
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.gaussian_process.kernels import RBF, Matern, RationalQuadratic, DotProduct
 from sklearn.model_selection import train_test_split, GridSearchCV
@@ -17,23 +18,27 @@ y = df["Type"]
 # 将数据分为训练集和测试集
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+scaler = RobustScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
 # 定义核函数和参数搜索空间
 kernel_options = [
-    RBF(length_scale=1.0),
-    Matern(length_scale=1.0, nu=1.5),
-    DotProduct(sigma_0=1.0)
+    RBF(length_scale=1.0, length_scale_bounds=(1e-2, 1e6)),
+    Matern(length_scale=1.0, nu=1.5, length_scale_bounds=(1e-2, 1e6)),
+    DotProduct(sigma_0=1.0, sigma_0_bounds=(1e-2, 1e6))
 ]
 
 param_grid = {
     'kernel': kernel_options,
-    'max_iter_predict': [100, 200, 300],
+    'max_iter_predict': [100, 200, 300, 500],
     'multi_class': ['one_vs_rest', 'one_vs_one']
 }
 
 # 使用GridSearchCV进行超参数优化
 gpc = GaussianProcessClassifier(random_state=42)
 grid_search = GridSearchCV(gpc, param_grid, cv=5, scoring='accuracy')
-grid_search.fit(X_train, y_train)
+grid_search.fit(X_train_scaled, y_train)
 
 # 获取最佳参数和最佳模型
 best_params = grid_search.best_params_
@@ -42,8 +47,8 @@ best_model = grid_search.best_estimator_
 print("Best parameters found: ", best_params)
 
 # 在测试集上评估最佳模型
-y_pred = best_model.predict(X_test)
-y_proba = best_model.predict_proba(X_test)[:, 1]
+y_pred = best_model.predict(X_test_scaled)
+y_proba = best_model.predict_proba(X_test_scaled)[:, 1]
 
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy:.2f}')
@@ -65,5 +70,5 @@ plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
 plt.title('Receiver Operating Characteristic')
 plt.legend(loc="lower right")
-plt.savefig("ROC_Curve_V2.png")
+plt.savefig("ROC_Curve_RobustScaler.png")
 plt.show()

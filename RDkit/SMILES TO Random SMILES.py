@@ -31,7 +31,6 @@ def generate_multiple_restricted_random_smiles(smiles, num_variants=3):
         attempts += 1
     return smiles_list
 
-
 # 示例使用和错误处理
 df = pd.read_csv('/content/Smiles list.csv')
 smiles_column = 'SMILES'

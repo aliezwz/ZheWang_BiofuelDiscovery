@@ -59,7 +59,7 @@ def iterbatches(epochs):
             yield {gan.data_inputs[0]: adjacency_tensor, gan.data_inputs[1]:node_tensor}
 
 gan.fit_gan(iterbatches(25), generator_steps=0.2, checkpoint_interval=5000)
-generated_data = gan.predict_gan_generator(1000)
+generated_data = gan.predict_gan_generator(10000)
 
 nmols = feat.defeaturize(generated_data)
 print("{} molecules generated".format(len(nmols)))
