@@ -1,5 +1,3 @@
-
-
 import deepchem
 deepchem.__version__
 
@@ -22,9 +20,6 @@ from rdkit.Chem import Draw
 
 from deepchem.feat.molecule_featurizers.molgan_featurizer import GraphMatrix
 
-# Download from MolNet
-# Try tox21 or LIPO dataset
-tasks, datasets, transformers = dc.molnet.load_tox21()
 df = pd.read_csv("../Dataset/Smiles list.csv")
 
 num_atoms = 12
