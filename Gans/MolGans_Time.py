@@ -18,6 +18,9 @@ from rdkit.Chem import Draw
 
 from deepchem.feat.molecule_featurizers.molgan_featurizer import GraphMatrix
 
+import torch
+print(torch.__version__)
+
 # Timing function
 def print_time(start, end, task_name):
     print(f"{task_name} took {end - start:.2f} seconds")
@@ -75,8 +78,7 @@ def iterbatches(epochs):
             yield {gan.data_inputs[0]: adjacency_tensor, gan.data_inputs[1]: node_tensor}
 
 # Train GAN
-gan.fit_gan(iterbatches(25), generator_steps=0.2, checkpoint_interval=5000)
-print_time(start_time, end_time, "Training GAN")
+gan.fit_gan(iterbatches(25), generator_steps=0.5, checkpoint_interval=5000)
 
 # Generate data
 start_time = time.time()
