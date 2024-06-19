@@ -6,7 +6,7 @@ from sklearn.metrics import classification_report, accuracy_score
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 # Load the dataset
-data = pd.read_csv("Dataset.csv")
+data = pd.read_csv("SemiSupervised_Dataset.csv")
 
 # Features and labels
 X = data.drop(columns=['Name', 'Smile', 'CAS Number', 'Type'])
