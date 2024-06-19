@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.semi_supervised import LabelSpreading
 from sklearn.metrics import classification_report, accuracy_score
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 # Load the dataset
 data = pd.read_csv("Dataset.csv")
@@ -15,6 +15,7 @@ y = data['Type']
 # Convert labels to numerical values
 le = LabelEncoder()
 y_encoded = le.fit_transform(y)
+
 
 # Randomly select a portion of the data to be labeled, the rest will be unlabeled (-1)
 rng = np.random.RandomState(42)
