@@ -16,7 +16,6 @@ y = data['Type']
 le = LabelEncoder()
 y_encoded = le.fit_transform(y)
 
-
 # Randomly select a portion of the data to be labeled, the rest will be unlabeled (-1)
 rng = np.random.RandomState(42)
 random_unlabeled_points = rng.rand(len(y_encoded)) < 0.7
@@ -25,12 +24,17 @@ y_encoded[random_unlabeled_points] = -1
 # Split the dataset into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2, random_state=42)
 
+# Standardize the data
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
 # Create and train the Label Spreading model
 label_spread = LabelSpreading(kernel='knn', n_neighbors=7)
-label_spread.fit(X_train, y_train)
+label_spread.fit(X_train_scaled, y_train)
 
 # Make predictions on the test set
-y_pred = label_spread.predict(X_test)
+y_pred = label_spread.predict(X_test_scaled)
 
 # Only consider the samples that are truly labeled
 mask = y_test != -1
