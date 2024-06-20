@@ -18,24 +18,18 @@ from rdkit.Chem import Draw
 
 from deepchem.feat.molecule_featurizers.molgan_featurizer import GraphMatrix
 
-# 计时函数
+# Timing function
 def print_time(start, end, task_name):
-    print(f"{task_name} 用了 {end - start:.2f} 秒")
+    print(f"{task_name} took {end - start:.2f} seconds")
 
-# 开始计时加载数据集
+# Start timing data loading
 start_time = time.time()
 
-# 从MolNet下载
-# 尝试tox21或LIPO数据集
-tasks, datasets, transformers = dc.molnet.load_tox21()
-end_time = time.time()
-print_time(start_time, end_time, "加载Tox21数据集")
-
-# 读取SMILES数据
+# Read SMILES data
 start_time = time.time()
 df = pd.read_csv("../Dataset/Smiles list.csv")
 end_time = time.time()
-print_time(start_time, end_time, "读取SMILES列表")
+print_time(start_time, end_time, "Reading SMILES list")
 
 num_atoms = 12
 print(df)
@@ -43,35 +37,35 @@ print(df)
 # data = df[['smiles']].sample(4000, random_state=42)
 data = df
 
-# 创建特征化器
+# Create featurizer
 start_time = time.time()
 feat = dc.feat.MolGanFeaturizer(max_atom_count=num_atoms, atom_labels=[0, 5, 6, 7, 8, 9, 11, 12, 13, 14])
 end_time = time.time()
-print_time(start_time, end_time, "创建特征化器")
+print_time(start_time, end_time, "Creating featurizer")
 
 smiles = data['SMILES'].values
 
 start_time = time.time()
 filtered_smiles = [x for x in smiles if Chem.MolFromSmiles(x).GetNumAtoms() < num_atoms]
 end_time = time.time()
-print_time(start_time, end_time, "过滤SMILES")
+print_time(start_time, end_time, "Filtering SMILES")
 
-# 特征化分子
+# Featurize molecules
 start_time = time.time()
 features = feat.featurize(filtered_smiles)
 end_time = time.time()
-print_time(start_time, end_time, "特征化分子")
+print_time(start_time, end_time, "Featurizing molecules")
 
 indices = [i for i, data in enumerate(features) if type(data) is GraphMatrix]
 print(indices)
 features = [features[i] for i in indices]
 
-# 创建模型
+# Create model
 start_time = time.time()
 gan = MolGAN(learning_rate=ExponentialDecay(0.001, 0.9, 5000), vertices=num_atoms)
 dataset = dc.data.NumpyDataset([x.adjacency_matrix for x in features], [x.node_features for x in features])
 end_time = time.time()
-print_time(start_time, end_time, "创建模型和数据集")
+print_time(start_time, end_time, "Creating model and dataset")
 
 def iterbatches(epochs):
     for i in range(epochs):
@@ -80,46 +74,55 @@ def iterbatches(epochs):
             node_tensor = one_hot(batch[1], gan.nodes)
             yield {gan.data_inputs[0]: adjacency_tensor, gan.data_inputs[1]: node_tensor}
 
-# 训练GAN
-start_time = time.time()
+# Train GAN
 gan.fit_gan(iterbatches(25), generator_steps=0.2, checkpoint_interval=5000)
-end_time = time.time()
-print_time(start_time, end_time, "训练GAN")
+print_time(start_time, end_time, "Training GAN")
 
-# 生成数据
+# Generate data
 start_time = time.time()
-generated_data = gan.predict_gan_generator(100000)
+generated_data = gan.predict_gan_generator(10000)
 end_time = time.time()
-print_time(start_time, end_time, "生成数据")
+print_time(start_time, end_time, "Generating data")
+time.sleep(10)
 
 start_time = time.time()
 nmols = feat.defeaturize(generated_data)
 end_time = time.time()
-print_time(start_time, end_time, "反特征化生成的数据")
-print("{} 个分子生成".format(len(nmols)))
+print_time(start_time, end_time, "Defeaturizing generated data")
+print("{} molecules generated".format(len(nmols)))
 
 nmols = list(filter(lambda x: x is not None, nmols))
 
-# 当前训练不稳定，因此0是常见结果
-print("{} 个有效分子".format(len(nmols)))
+print("{} valid molecules".format(len(nmols)))
+
+# Initialize list to save SMILES
+generated_smiles_list = []
 
 nmols_smiles = [Chem.MolToSmiles(m) for m in nmols]
 nmols_smiles_unique = list(OrderedDict.fromkeys(nmols_smiles))
 nmols_viz = [Chem.MolFromSmiles(x) for x in nmols_smiles_unique]
-print("{} 个独特有效分子".format(len(nmols_viz)))
+print("{} unique valid molecules".format(len(nmols_viz)))
 
-# 打印生成的SMILES
-print("生成的SMILES:")
+# Add generated SMILES to the list
+generated_smiles_list.extend(nmols_smiles_unique)
+
+# Print generated SMILES
+print("Generated SMILES:")
 for smiles in nmols_smiles_unique:
     print(smiles)
 
-# 生成图像
+# Save generated SMILES to file
+with open('generated_smiles_epoches=100.txt', 'w') as f:
+    for smiles in generated_smiles_list:
+        f.write(f"{smiles}\n")
+
+# Generate image
 start_time = time.time()
 img = Draw.MolsToGridImage(nmols_viz[0:100], molsPerRow=5, subImgSize=(250, 250), maxMols=100, legends=None, returnPNG=False)
 end_time = time.time()
-print_time(start_time, end_time, "生成图像")
+print_time(start_time, end_time, "Generating image")
 
-# 使用matplotlib显示图像
+# Display image using matplotlib
 plt.figure(figsize=(12, 12))
 plt.imshow(img)
 plt.axis('off')

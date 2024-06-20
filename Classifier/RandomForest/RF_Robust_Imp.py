@@ -8,39 +8,39 @@ from sklearn.metrics import accuracy_score, classification_report, roc_curve, au
 import matplotlib.pyplot as plt
 import joblib
 
-# 读取数据
+# Read data
 data = pd.read_csv("Dataset for pre.csv")
 
-# 检查并处理无限大的值，替换为NaN
+# Check and handle infinite values, replace with NaN
 data.replace([np.inf, -np.inf], np.nan, inplace=True)
 
-# 准备数据
+# Prepare data
 X = data.drop(["Name", "Smile", "CAS Number", "Type"], axis=1)
 y = data["Type"]
 
-# 对数变换以处理极端值
+# Log transform to handle extreme values
 X_log_transformed = np.log1p(X)
 
-# 使用均值填充NaN值
+# Fill NaN values with the mean
 imputer = SimpleImputer(strategy='mean')
 X_filled = imputer.fit_transform(X_log_transformed)
 
-# 划分训练集和测试集
+# Split data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X_filled, y, test_size=0.2, random_state=42)
 
-# 使用 RobustScaler 标准化数据
+# Standardize data using RobustScaler
 scaler = RobustScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
-# 保存标准化参数和填充器
+# Save scaler and imputer
 joblib.dump(scaler, 'scaler.joblib')
 joblib.dump(imputer, 'imputer.joblib')
 
-# 创建随机森林分类器
+# Create RandomForest classifier
 rf_classifier = RandomForestClassifier(random_state=250)
 
-# 网格搜索参数优化
+# Grid search parameter tuning
 param_grid = {
     'n_estimators': [50, 100, 200],
     'max_depth': [None, 10, 20, 30, 40, 50],
@@ -52,26 +52,26 @@ param_grid = {
 grid_search = GridSearchCV(estimator=rf_classifier, param_grid=param_grid, cv=10, scoring='accuracy')
 grid_search.fit(X_train_scaled, y_train)
 
-# 获取最佳模型
+# Get the best model
 best_rf = grid_search.best_estimator_
 
-# 进行预测
+# Make predictions
 y_pred = best_rf.predict(X_test_scaled)
 accuracy = accuracy_score(y_test, y_pred)
 classification_rep = classification_report(y_test, y_pred)
 
-# 输出结果
+# Output results
 print('Best Parameters:', grid_search.best_params_)
 print('Accuracy:', accuracy)
 print('Classification Report:\n', classification_rep)
 print("Classes sorted by RandomForestClassifier:", best_rf.classes_)
 
-# 计算ROC曲线数据和AUC
-y_scores = best_rf.predict_proba(X_test_scaled)[:, 1]  # 取第二列作为正类的概率
+# Compute ROC curve data and AUC
+y_scores = best_rf.predict_proba(X_test_scaled)[:, 1]  # Take the second column as the probability of the positive class
 fpr, tpr, _ = roc_curve(y_test, y_scores, pos_label=best_rf.classes_[1])
 roc_auc = auc(fpr, tpr)
 
-# 绘制 ROC 曲线
+# Plot ROC curve
 plt.figure()
 plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
 plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
@@ -83,7 +83,6 @@ plt.title('Receiver Operating Characteristic')
 plt.legend(loc="lower right")
 plt.savefig("ROC Curve")
 plt.show()
-
 
 # Feature importance
 importance = best_rf.feature_importances_
@@ -100,34 +99,34 @@ plt.title('Top 10 Feature Importances', fontsize=15)
 plt.savefig("Top 10")
 plt.show()
 
-# # 保存模型
-# joblib.dump(best_rf, 'best_random_forest_model.joblib')
-#
-# # 加载模型和标准化对象
-# model = joblib.load('best_random_forest_model.joblib')
-# scaler = joblib.load('scaler.joblib')
-# imputer = joblib.load('imputer.joblib')
-#
-# # 加载新数据集
-# new_data = pd.read_csv('LOTUS Dataset with rdkit.csv')
-# new_data_cleaned = new_data.drop(['SMILES', 'Name'], axis=1)
-# new_data_cleaned.replace([np.inf, -np.inf], np.nan, inplace=True)
-#
-# # 应用对数转换并填充缺失值
-# new_data_log_transformed = np.log1p(new_data_cleaned)
-# new_data_filled = imputer.transform(new_data_log_transformed)
-#
-# # 使用相同的标准化参数来转换新数据集
-# new_data_scaled = scaler.transform(new_data_filled)
-# new_data_scaled = new_data_scaled.astype(np.float64)  # 确保数据类型为 float64
-#
-# # 应用模型进行分类
-# predictions = model.predict(new_data_scaled)
-#
-# # 将预测结果添加到数据集中
-# new_data['Predicted_Type'] = predictions
-#
-# # 保存预测结果到新的CSV文件
-# new_data.to_csv('LOTUS_Type.csv', index=False)
-#
-# print("Classification complete and saved to 'LOTUS_Type.csv'.")
+# Save the model
+joblib.dump(best_rf, 'best_random_forest_model.joblib')
+
+# Load the model and scaler
+model = joblib.load('best_random_forest_model.joblib')
+scaler = joblib.load('scaler.joblib')
+imputer = joblib.load('imputer.joblib')
+
+# Load new dataset
+new_data = pd.read_csv('LOTUS Dataset with rdkit.csv')
+new_data_cleaned = new_data.drop(['SMILES', 'Name'], axis=1)
+new_data_cleaned.replace([np.inf, -np.inf], np.nan, inplace=True)
+
+# Apply log transformation and fill missing values
+new_data_log_transformed = np.log1p(new_data_cleaned)
+new_data_filled = imputer.transform(new_data_log_transformed)
+
+# Standardize new dataset using the same scaler
+new_data_scaled = scaler.transform(new_data_filled)
+new_data_scaled = new_data_scaled.astype(np.float64)  # Ensure data type is float64
+
+# Apply the model for classification
+predictions = model.predict(new_data_scaled)
+
+# Add prediction results to the dataset
+new_data['Predicted_Type'] = predictions
+
+# Save prediction results to a new CSV file
+new_data.to_csv('LOTUS_Type.csv', index=False)
+
+print("Classification complete and saved to 'LOTUS_Type.csv'.")
