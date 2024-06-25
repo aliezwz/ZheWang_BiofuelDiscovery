@@ -3,7 +3,7 @@
 In BiofuelDiscovery project, we trained three classifier models using Gaussian processes, random forests, and semi-supervised learning algorithms. We then used the SMILES of biofuels classified by these models to train the GAN model. Finally, we added the unique molecules created by the GAN to the total database and repeated the training cycle.
 ## 2. Tutorial
 ### 2.1 Prepare the database
-To run BiofuelDiscovery project, firstly you need to prepare a dataset containing biofuel molecules and fossil fuel molecules. Here, we call it "training dataset". This dataset should contains columns for "Name", "Smiles" and "Types". The "Name" column contains the name of the molecule. The "Smiles" column contains the **SMILES**(simplified molecular-input line-entry system) of the molecule, **SMILES** is a specification in the form of a line notation for describing the structure of chemical species using short ASCII strings[1], you can search for smiles for each molecule on PubChem or use rdkit to generate smiles.  
+To run BiofuelDiscovery project, firstly you need to prepare a dataset containing biofuel molecules and fossil fuel molecules. Here, we call it "training dataset". This dataset should contains columns for "Name", "Smiles" and "Types". The "Name" column contains the name of the molecule. The "Smiles" column contains the **SMILES**(simplified molecular-input line-entry system) of the molecule, **SMILES** is a specification in the form of a line notation for describing the structure of chemical species using short ASCII strings[[1]](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system), you can search for smiles for each molecule on PubChem or use rdkit to generate smiles.  
 
 In addition to the "training database", you still need to prepare a large database containing many biomass molecules. We call it the "Classification Database".
 
@@ -78,8 +78,13 @@ In Dataset fold, we have four datasets, "Training dataset.csv" is used for three
 # Classifier
 In Classifier fold, we have three models, these classifiers are used to distinguish biofuels from fossil fuels in the "Dataset.csv".
 # Gan
-In Gan fold, we use molgan to generated unique vaild molecules.
+In Gan fold, we use molgan to generated unique vaild molecules.  
+The MolGAN network was initially presented by Cao and Kipf in their work "MolGAN: An implicit generative model for small molecular graphs[[2]](https://arxiv.org/abs/1805.11973)
 # RDkit
 In this fold, we have two tools, "SMILES TO Random SMILES.py" can convert SMILES to Random SMILES, "Descriptor.py" can calculate all properties of a molecule based on the SMILES.
 # PairPlot
 We use PairPlot to visualize the relationships between important descriptors for data exploration.
+
+# Reference
+[1] [SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system)
+[2] [Molgan](https://arxiv.org/abs/1805.11973)
