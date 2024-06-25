@@ -52,8 +52,27 @@ After step 2, you will get a dataset with label.
 | 3,3-Dimethylpentane| CCC(C)(C)CC      | Biofuel       |
 
 For Molgan, every time you run it, you will get a series of smiles.
-
-
+| Generated SMILES                   |
+|------------------------------------|
+| CCCC                               |
+| CCCO                               |
+| CC12CC3(C4OC41)C1CC34CC124         |
+| CCC                                |
+| CCC1C2C3C4C3C4C(C)C12C             |
+| OCCO                               |
+| CC                                 |
+| CCC1(C)CC1                         |
+| CCOO                               |
+| CC12C3CCC4C15C1C32C415             |
+| C=CC                               |
+| O=CO                               |
+| CCC=CC1CC1                         |
+| CCO                                |
+| CC1=CC1                            |
+| CC(C)(C)C1(C)CC1                   |
+| CC=CCCC                            |
+| CC(CO)C1(C)C(C)CC12CC2             |
+| …………                               |
 # Dataset
 In Dataset fold, we have four datasets, "Training dataset.csv" is used for three Classifiers, “Smiles list.csv" is used for Molgan to generate SMILES, "SemiSupervised_Dataset.csv" is used for Semi-Supervised Learning model, but it have some problem. In addition, we also have a file called "Rd_SMILES".csv, which is used to expand the database.
 # Classifier
