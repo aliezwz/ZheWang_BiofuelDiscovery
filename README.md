@@ -38,5 +38,3 @@ In Gan fold, we use molgan to generated unique vaild molecules.
 In this fold, we have two tools, "SMILES TO Random SMILES.py" can convert SMILES to Random SMILES, "Descriptor.py" can calculate all properties of a molecule based on the SMILES.
 # PairPlot
 We use PairPlot to visualize the relationships between important descriptors for data exploration.
-# Others
-If you want to run Molgan, please check whether your third-party library version is consistent with that in requirement.txt.
