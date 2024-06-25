@@ -184,7 +184,8 @@ def optimize_hyperparameters_grid_search(X, y):
 
 # Function to get important features (not directly applicable for Gaussian Process, but kept for consistency)
 def get_important_features(model, feature_names, top_n=5):
-    return []
+    # For GaussianProcessClassifier, return the first `top_n` features as important features
+    return feature_names[:top_n]
 
 
 # Main function
@@ -198,6 +199,8 @@ def main():
     X, y, smiles, label_encoder = apply_descriptors(df)
     X_train, X_test, y_train, y_test, smiles_train, smiles_test = split_data(X, y, smiles)
     print("Label classes:", label_encoder.classes_)
+
+    print(df)
 
     # Preprocess the data with user options
     apply_low_variance = False
@@ -279,7 +282,9 @@ def main():
     plot_and_save_roc(y_test, best_model.predict_proba(X_test_preprocessed)[:, 1], label_encoder, filename='final_roc_curve.png')
 
     # Plot pairplot with the most important features (not applicable for GP but kept for completeness)
-    important_features = get_important_features(best_model, range(X_train_preprocessed.shape[1]), top_n=5)
+    important_features = get_important_features(best_model, list(range(X_train_preprocessed.shape[1])), top_n=5)
+    if not important_features:  # If no important features were found, use the first 5 features
+        important_features = list(range(min(5, X_train_preprocessed.shape[1])))
     df_imp_features = pd.DataFrame(X_train_preprocessed, columns=range(X_train_preprocessed.shape[1]))
     df_imp_features['Type'] = y_train
 
@@ -296,7 +301,6 @@ def main():
     assert y_proba is not None, "Probability prediction failed on the test set"
     assert 'accuracy' in final_metrics, "Accuracy metric is missing in the final metrics"
     assert 'roc_auc' in final_metrics, "ROC AUC metric is missing in the final metrics"
-
 
 if __name__ == "__main__":
     main()

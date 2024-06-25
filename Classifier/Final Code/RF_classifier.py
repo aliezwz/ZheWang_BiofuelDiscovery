@@ -38,7 +38,7 @@ def encode_labels(y):
 
 # Function to convert Smile to molecular descriptors
 def smiles_to_descriptors(smiles):
-    mol = Chem.MolFromSmile(smiles)
+    mol = Chem.MolFromSmiles(smiles)
     assert mol is not None, f"RDKit could not parse Smile: {smiles}"
     calc = MoleculeDescriptors.MolecularDescriptorCalculator([desc[0] for desc in Descriptors._descList])
     descriptors = calc.CalcDescriptors(mol)
