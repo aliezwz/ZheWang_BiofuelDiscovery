@@ -79,7 +79,8 @@ In Dataset fold, we have four datasets, "Training dataset.csv" is used for three
 In Classifier fold, we have three models, these classifiers are used to distinguish biofuels from fossil fuels in the "Dataset.csv".
 # Gan
 In Gan fold, we use molgan to generated unique vaild molecules.  
-The MolGAN network was initially presented by Cao and Kipf in their work "MolGAN: An implicit generative model for small molecular graphs[[2]](https://arxiv.org/abs/1805.11973)
+The MolGAN network was initially presented by Cao and Kipf in their work "MolGAN: An implicit generative model for small molecular graphs[[2]](https://arxiv.org/abs/1805.11973)  
+In Molgan, we have many parameters, here we will introduce some important parameters in Molgan.
 # RDkit
 In this fold, we have two tools, "SMILES TO Random SMILES.py" can convert SMILES to Random SMILES, "Descriptor.py" can calculate all properties of a molecule based on the SMILES.
 # PairPlot
