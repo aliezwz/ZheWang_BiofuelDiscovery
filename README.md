@@ -17,7 +17,8 @@ pip install torch
 pip install tensorflow  
 pip install deepchem  
 ```  
-Additionally, if you want to know all the libraries needed to run Molgan, please check requirements.txt.
+Additionally, if you want to know all the libraries needed to run Molgan, please check requirements.txt. Also more information you can check the deepchem tutorials.  
+[Deepchem tutorials](https://github.com/deepchem/deepchem/blob/master/examples/tutorials/Generating_molecules_with_MolGAN.ipynb)
 ### 2.3 How to 
 In order to run the project, user should follow the following steps:  
 1-Select any model in the Classifier fold and train it using trining database. You will get a trianed modle.  
