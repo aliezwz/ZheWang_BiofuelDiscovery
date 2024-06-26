@@ -73,11 +73,7 @@ For Molgan, every time you run it, you will get a series of smiles.
 | CC=CCCC                            |
 | CC(CO)C1(C)C(C)CC12CC2             |
 | …………                               |
-# Dataset
-In Dataset fold, we have four datasets, "Training dataset.csv" is used for three Classifiers, “Smiles list.csv" is used for Molgan to generate SMILES, "SemiSupervised_Dataset.csv" is used for Semi-Supervised Learning model, but it have some problem. In addition, we also have a file called "Rd_SMILES".csv, which is used to expand the database.
-# Classifier
-In Classifier fold, we have three models, these classifiers are used to distinguish biofuels from fossil fuels in the "Dataset.csv".
-# Gan
+# 4.Gan
 In Gan fold, we use MolGAN to generated unique vaild molecules.  
 The MolGAN network was initially presented by Cao and Kipf in their work "MolGAN: An implicit generative model for small molecular graphs[[2]](https://arxiv.org/abs/1805.11973)  
 In MolGAN, we have many parameters, here we will introduce some important parameters in MolGAN. You can change these parameters to explore MolGAN.  
@@ -97,7 +93,7 @@ generated_data = gan.predict_gan_generator(10000)
 ```
 Here, we define the number of molecules we want to generate as 10000. A larger number means more molecules will be generated and more time will be required to generate them. But please make sure you have enough molecular samples for GAN to learn.
 
-# RDkit
+# 5.RDkit
 Once you have the **SMILES** of a molecule, you also need enough descriptors for the classifier to learn the molecular features. These descriptors can be calculated using RDkit.
 ```
 def smiles_to_descriptors(smiles):
@@ -108,9 +104,10 @@ def smiles_to_descriptors(smiles):
     return np.array(descriptors)
 ```
 The **smiles_to_descriptors** function converts a molecule's SMILES representation into a set of molecular descriptors. Specifically, it uses RDKit to parse the SMILES string into a molecule object, checks if the parsing is successful, calculates all the molecular descriptors using a molecular descriptor calculator, and finally returns the descriptors as a NumPy array. These descriptors can be used as features in cheminformatics and molecular modeling to predict the chemical and physical properties of the molecule.
-# PairPlot
-We use PairPlot to visualize the relationships between important descriptors for data exploration.
+# 6. Pairplot
+This is the data exploration part. In this part, you can use the code in pairplot to see the relationship between the different descriptors.
+![image](https://github.com/aliezwz/ZheWang_BiofuelDiscovery/assets/147146769/d38cfa2c-083f-4694-923c-af63de4896a9)
 
-# Reference
+# 7.Reference
 [1] [SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system)
 [2] [Molgan](https://arxiv.org/abs/1805.11973)
