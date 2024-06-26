@@ -105,7 +105,12 @@ def smiles_to_descriptors(smiles):
 ```
 The **smiles_to_descriptors** function converts a molecule's SMILES representation into a set of molecular descriptors. Specifically, it uses RDKit to parse the SMILES string into a molecule object, checks if the parsing is successful, calculates all the molecular descriptors using a molecular descriptor calculator, and finally returns the descriptors as a NumPy array. These descriptors can be used as features in cheminformatics and molecular modeling to predict the chemical and physical properties of the molecule.
 # 6. Pairplot
-This is the data exploration part. In this part, you can use the code in pairplot to see the relationship between the different descriptors.
+This is the data exploration part. In this part, you can use the code in pairplot to see the relationship between the different descriptors.  
+```
+data = pd.read_csv("Orignal Dataset.csv")
+selected_feature = ['MinPartialCharge', 'BCUT2D_CHGLO', 'BCUT2D_LOGPHI', 'Chi2v','VSA_EState8', "Type"]
+```
+Here you just need to substitute your database and change the features (descriptors) you want to see.
 ![image](https://github.com/aliezwz/ZheWang_BiofuelDiscovery/assets/147146769/d38cfa2c-083f-4694-923c-af63de4896a9)
 
 # 7.Reference
