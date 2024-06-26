@@ -109,5 +109,5 @@ This is the data exploration part. In this part, you can use the code in pairplo
 ![image](https://github.com/aliezwz/ZheWang_BiofuelDiscovery/assets/147146769/d38cfa2c-083f-4694-923c-af63de4896a9)
 
 # 7.Reference
-[1] [SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system)
+[1] [SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system)  
 [2] [Molgan](https://arxiv.org/abs/1805.11973)
