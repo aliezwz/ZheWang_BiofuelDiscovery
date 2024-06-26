@@ -98,7 +98,16 @@ generated_data = gan.predict_gan_generator(10000)
 Here, we define the number of molecules we want to generate as 10000. A larger number means more molecules will be generated and more time will be required to generate them. But please make sure you have enough molecular samples for GAN to learn.
 
 # RDkit
-In this fold, we have two tools, "SMILES TO Random SMILES.py" can convert SMILES to Random SMILES, "Descriptor.py" can calculate all properties of a molecule based on the SMILES.
+Once you have the **SMILES** of a molecule, you also need enough descriptors for the classifier to learn the molecular features. These descriptors can be calculated using RDkit.
+```
+def smiles_to_descriptors(smiles):
+    mol = Chem.MolFromSmiles(smiles)
+    assert mol is not None, f"RDKit could not parse Smile: {smiles}"
+    calc = MoleculeDescriptors.MolecularDescriptorCalculator([desc[0] for desc in Descriptors._descList])
+    descriptors = calc.CalcDescriptors(mol)
+    return np.array(descriptors)
+```
+The **smiles_to_descriptors** function converts a molecule's SMILES representation into a set of molecular descriptors. Specifically, it uses RDKit to parse the SMILES string into a molecule object, checks if the parsing is successful, calculates all the molecular descriptors using a molecular descriptor calculator, and finally returns the descriptors as a NumPy array. These descriptors can be used as features in cheminformatics and molecular modeling to predict the chemical and physical properties of the molecule.
 # PairPlot
 We use PairPlot to visualize the relationships between important descriptors for data exploration.
 
