@@ -78,9 +78,25 @@ In Dataset fold, we have four datasets, "Training dataset.csv" is used for three
 # Classifier
 In Classifier fold, we have three models, these classifiers are used to distinguish biofuels from fossil fuels in the "Dataset.csv".
 # Gan
-In Gan fold, we use molgan to generated unique vaild molecules.  
+In Gan fold, we use MolGAN to generated unique vaild molecules.  
 The MolGAN network was initially presented by Cao and Kipf in their work "MolGAN: An implicit generative model for small molecular graphs[[2]](https://arxiv.org/abs/1805.11973)  
-In Molgan, we have many parameters, here we will introduce some important parameters in Molgan.
+In MolGAN, we have many parameters, here we will introduce some important parameters in MolGAN. You can change these parameters to explore MolGAN.  
+```
+num_atoms = 12
+```
+The **num_atoms** parameter determines the maximum size of molecules to be processed and generated. The size of the num_atoms parameter directly affects the model's efficiency, data processing capabilities, and the diversity and complexity of the generated results.
+```
+gan.fit_gan(iterbatches(25), generator_steps=0.2, checkpoint_interval=5000)
+```
+Here, iterbatches is a funcation。 In this function, you need to pass in the value of **epoch**(25). This means the model will be trained for 25 epochs, with each epoch going through the entire dataset.The size of the epochs value directly affects the model training time, performance, convergence, and risk of overfitting.  
+
+The **generator_steps** parameter controls the frequency and number of steps that the generator updates relative to the discriminator. Here, generator_steps is set to 0.2, so the generator will be updated 0.2 times after each discriminator update, that is, the generator will be updated once after every 5 discriminator updates. The size of the generator_steps parameter affects the update frequency and balance of the generator and discriminator during training.  
+
+```
+generated_data = gan.predict_gan_generator(10000)
+```
+Here, we define the number of molecules we want to generate as 10000. A larger number means more molecules will be generated and more time will be required to generate them. But please make sure you have enough molecular samples for GAN to learn.
+
 # RDkit
 In this fold, we have two tools, "SMILES TO Random SMILES.py" can convert SMILES to Random SMILES, "Descriptor.py" can calculate all properties of a molecule based on the SMILES.
 # PairPlot
