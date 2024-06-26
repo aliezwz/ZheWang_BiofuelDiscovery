@@ -73,7 +73,12 @@ For Molgan, every time you run it, you will get a series of smiles.
 | CC=CCCC                            |
 | CC(CO)C1(C)C(C)CC12CC2             |
 | …………                               |
-# 4.Gan
+# 4. Classifier
+In Classifier fold, we have three classifiers, They used Gaussian process, random tree forest and semi-supervised learning algorithms respectively.
+## 4.1 Gaussian process classifier
+
+
+# 5.Gan
 In Gan fold, we use MolGAN to generated unique vaild molecules.  
 The MolGAN network was initially presented by Cao and Kipf in their work "MolGAN: An implicit generative model for small molecular graphs[[2]](https://arxiv.org/abs/1805.11973)  
 In MolGAN, we have many parameters, here we will introduce some important parameters in MolGAN. You can change these parameters to explore MolGAN.  
@@ -93,7 +98,7 @@ generated_data = gan.predict_gan_generator(10000)
 ```
 Here, we define the number of molecules we want to generate as 10000. A larger number means more molecules will be generated and more time will be required to generate them. But please make sure you have enough molecular samples for GAN to learn.
 
-# 5.RDkit
+# 6.RDkit
 Once you have the **SMILES** of a molecule, you also need enough descriptors for the classifier to learn the molecular features. These descriptors can be calculated using RDkit.
 ```
 def smiles_to_descriptors(smiles):
@@ -104,7 +109,7 @@ def smiles_to_descriptors(smiles):
     return np.array(descriptors)
 ```
 The **smiles_to_descriptors** function converts a molecule's SMILES representation into a set of molecular descriptors. Specifically, it uses RDKit to parse the SMILES string into a molecule object, checks if the parsing is successful, calculates all the molecular descriptors using a molecular descriptor calculator, and finally returns the descriptors as a NumPy array. These descriptors can be used as features in cheminformatics and molecular modeling to predict the chemical and physical properties of the molecule.
-# 6. Pairplot
+# 7. Pairplot
 This is the data exploration part. In this part, you can use the code in pairplot to see the relationship between the different descriptors.  
 ```
 data = pd.read_csv("Orignal Dataset.csv")
@@ -113,6 +118,6 @@ selected_feature = ['MinPartialCharge', 'BCUT2D_CHGLO', 'BCUT2D_LOGPHI', 'Chi2v'
 Here you just need to substitute your database and change the features (descriptors) you want to see.
 ![image](https://github.com/aliezwz/ZheWang_BiofuelDiscovery/assets/147146769/d38cfa2c-083f-4694-923c-af63de4896a9)
 
-# 7.Reference
+# 8.Reference
 [1] [SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system)  
 [2] [Molgan](https://arxiv.org/abs/1805.11973)
