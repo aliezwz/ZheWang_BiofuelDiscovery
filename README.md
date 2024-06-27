@@ -302,7 +302,7 @@ def compute_metrics(y_true, y_pred, y_proba, label_encoder):
 **y_pred**: predicted label array.  
 **y_proba**: predicted probability array.  
 **label_encoder**: label encoder object, used to convert numerical labels back to original category labels.  
-**Output**: A dictionary containing various performance metrics.
+**Output**: A dictionary containing various performance metrics.  
 **Usage**:  
 ```
 metrics = compute_metrics(y_test, y_pred, y_proba, label_encoder)
@@ -334,7 +334,8 @@ def plot_and_save_roc(y_true, y_proba, label_encoder, filename='roc_curve.png'):
 **y_proba**: predicted probability array.  
 **label_encoder**: label encoder object, used to convert numerical labels back to original category labels.  
 **filename**: The filename to save the image to (default is 'roc_curve.png').
-**Output**: Generate and save ROC curve graphs.
+**Output**: Generate and save ROC curve graphs.  
+**Usage**:  
 ```
 plot_and_save_roc(y_test, baseline_model_result.predict_proba(X_test_preprocessed)[:, 1], label_encoder, filename='baseline_roc_curve.png')
 ```
@@ -352,6 +353,7 @@ def optimize_hyperparameters_tpot(X, y):
 **X**: feature matrix.  
 **y**: label array.  
 **Output**: The optimized pipeline and its hyperparameters.  
+**Usage**:  
 ```
 optimize_hyperparameters_tpot(X_train_preprocessed, y_train)
 ```
@@ -375,7 +377,7 @@ def optimize_hyperparameters_grid_search(X, y):
 **Meaning**: Use Grid Search to optimize the hyperparameters.  
 **Input**:  Same with optimize_hyperparameters_tpot.  
 **Output**: The best estimator and the best parameter combination.  
-**Usage**  
+**Usage**：  
 ```
 optimize_hyperparameters_grid_search(X_train_preprocessed, y_train)
 ```
