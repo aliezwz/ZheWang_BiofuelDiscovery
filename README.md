@@ -373,9 +373,9 @@ def optimize_hyperparameters_grid_search(X, y):
     return grid_search.best_estimator_, grid_search.best_params_
 ```
 **Meaning**: Use Grid Search to optimize the hyperparameters.  
-**Input**:  Same with optimize_hyperparameters_tpot.
-**Output**: The best estimator and the best parameter combination.
-**Usage**
+**Input**:  Same with optimize_hyperparameters_tpot.  
+**Output**: The best estimator and the best parameter combination.  
+**Usage**  
 ```
 optimize_hyperparameters_grid_search(X_train_preprocessed, y_train)
 ```
