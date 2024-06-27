@@ -87,10 +87,10 @@ def read_data(csv_file):
     print("Dataset reading completed.")
     return df
 ```
-Meaning:Reading the database.  
-Input:**Dataset.csv**  
-Output:**Dataset.csv**  
-Usage:
+**Meaning**: Reading the database.  
+**Input**: Dataset.csv  
+**Output**: Dataset.csv  
+**Usage**:
 ```
 csv_file = 'Dataset.csv'
 df = read_data(csv_file)
@@ -103,9 +103,9 @@ def encode_labels(y):
     y_encoded = le.fit_transform(y)
     return y_encoded, le
 ```
-Meaning:Convert category labels to numeric labels.  
-Input: **y**  This is the column in your database that contains the categories.  
-Output:The encoded numeric labels and the LabelEncoder object used for encoding.
+**Meaning**: Convert category labels to numeric labels.  
+**Input**: **y**  This is the column in your database that contains the categories.  
+**Output**: The encoded numeric labels and the LabelEncoder object used for encoding.
 ```
 [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -129,7 +129,7 @@ Output:The encoded numeric labels and the LabelEncoder object used for encoding.
  0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 1 1 1 1 1]  
 LabelEncoder()
 ```
-Usage:  
+**Usage**:  
 ```
 y, label_encoder = encode_labels(df['Type'].values)
 print(y)
@@ -144,10 +144,10 @@ def smiles_to_descriptors(smiles):
     descriptors = calc.CalcDescriptors(mol)
     return np.array(descriptors)
 ```
-Meaning:Convert SMILES representations of chemical molecules into molecular descriptors.  
-Input: SMILES
-Output: Molecular descriptors  
-Usage:  
+**Meaning**: Convert SMILES representations of chemical molecules into molecular descriptors.  
+**Input**: SMILES
+**Output**: Molecular descriptors  
+**Usage**:  
 ```
 df['Descriptors'] = df['Smile'].apply(smiles_to_descriptors)
 print(df['Descriptors'])
@@ -163,10 +163,10 @@ def apply_descriptors(df):
     print("Descriptor conversion completed.")
     return X, y, smiles, label_encoder
 ```
-Meaning:Convert the SMILES string for each chemical molecule in the dataset into a molecular descriptor and encode the target label. This is equivalent to the combination of the two functions encode_labels and smiles_to_descriptors.  
-Input: **Dataframe**  Here you can get the dataframe by running **read_data**.  
-Output: Features array, label array, SMILES string array, and label encoder object.  
-Usage:  
+**Meaning**: Convert the SMILES string for each chemical molecule in the dataset into a molecular descriptor and encode the target label. This is equivalent to the combination of the two functions encode_labels and smiles_to_descriptors.  
+**Input**: **Dataframe**  Here you can get the dataframe by running **read_data**.  
+**Output**: Features array, label array, SMILES string array, and label encoder object.  
+**Usage**:  
 ```
 X, y, smiles, label_encoder = apply_descriptors(df)
 print(X,y,smiles,label_encoder)
@@ -180,10 +180,10 @@ def split_data(X, y, smiles):
     print("Data splitting completed.")
     return X_train, X_test, y_train, y_test, smiles_train, smiles_test
 ```
-Meaning:Divide the dataset into training and test sets, and ensure that the training and test sets after the split are not empty.  
-Input: The feature array X, the label array y, and the SMILES string array smiles.  
-Output: Split training and test set features, labels, and SMILES strings.  
-Usage:  
+**Meaning**: Divide the dataset into training and test sets, and ensure that the training and test sets after the split are not empty.  
+**Input**: The feature array X, the label array y, and the SMILES string array smiles.  
+**Output**: Split training and test set features, labels, and SMILES strings.  
+**Usage**:  
 Here, You can achieve different ratios by changing the parameter **test_size**.
 ```
 X_train, X_test, y_train, y_test, smiles_train, smiles_test = split_data(X, y, smiles)
@@ -197,10 +197,10 @@ def low_variance_filter(X, threshold=0.01):
     assert X_filtered.shape[1] > 0, "All features removed by low variance filter"
     return X_filtered
 ```
-Meaning:Apply a low variance filter to remove features whose variance is below a specified threshold.  
-Input: The feature matrix X and the variance threshold threshold.    
-Output: Feature matrix after low variance filtering.    
-Usage:  
+**Meaning**: Apply a low variance filter to remove features whose variance is below a specified threshold.  
+**Input**: The feature matrix X and the variance threshold threshold.    
+**Output**: Feature matrix after low variance filtering.    
+**Usage**:  
 ```
 X_train = low_variance_filter(X_train)
 print(X_train)
@@ -216,10 +216,10 @@ def correlation_filter(X_train, X_test, threshold=0.95):
     assert X_train_filtered.shape[1] > 0, "All features removed by correlation filter"
     return X_train_filtered, X_test_filtered
 ```
-Meaning:By calculating the correlation between the features in the training set, highly correlated features are removed.  
-Input:Training set feature matrix **X_train**, test set feature matrix **X_test**, correlation threshold **threshold**.  
-Output: Feature matrices of the training and test sets after correlation filtering.  
-Usage:  
+**Meaning**: By calculating the correlation between the features in the training set, highly correlated features are removed.  
+**Input**: Training set feature matrix **X_train**, test set feature matrix **X_test**, correlation threshold **threshold**.  
+**Output**: Feature matrices of the training and test sets after correlation filtering.  
+**Usage**:  
 ```
 X_train, X_test = correlation_filter(X_train, X_test)
 print(X_train,X_test)
@@ -238,10 +238,10 @@ def preprocess_data(X_train, X_test, smiles_train, smiles_test, apply_low_varian
     print("Preprocessing completed.")
     return X_train, X_test
 ```
-Meaning:Preprocess the training and test feature data based on the user's choice, including applying low variance filters and correlation filters.  
-Input:The training set feature matrix **X_train**, the test set feature matrix **X_test**, the SMILES strings **smiles_train** and **smiles_test** for the training and test sets, and two Boolean parameters **apply_low_variance** and **apply_correlation_filter** to control whether to apply the corresponding filters.  
-Output: Feature matrices of the training and test sets after preprocessing.  
-Usage:  
+**Meaning**: Preprocess the training and test feature data based on the user's choice, including applying low variance filters and correlation filters.  
+**Input**: The training set feature matrix **X_train**, the test set feature matrix **X_test**, the SMILES strings **smiles_train** and **smiles_test** for the training and test sets, and two Boolean parameters **apply_low_variance** and **apply_correlation_filter** to control whether to apply the corresponding filters.  
+**Output**: Feature matrices of the training and test sets after preprocessing.  
+**Usage**:  
 Here, apply_low_variance and apply_correlation_filter default to True, you can change them to False.
 ```
     apply_low_variance = False
@@ -268,15 +268,15 @@ def baseline_model(X_train, y_train, X_test, y_test, label_encoder):
     print("Baseline model training completed.")
     return model, metrics
 ```
-Meaning: Use the GaussianProcessClassifier as the baseline model and calculate various performance indicators of the model on the test set.  
-Input:  
+**Meaning**: Use the GaussianProcessClassifier as the baseline model and calculate various performance indicators of the model on the test set.  
+**Input**:  
 **X_train**: training set feature matrix.
 **y_train**: training set label array.
 **X_test**: test set feature matrix.
 **y_test**: test set label array.
 **label_encoder**: label encoder object, used to convert numerical labels back to original category labels.
-Output: The trained model and the performance indicators of the model on the test set.  
-Usage:  
+**Output**: The trained model and the performance indicators of the model on the test set.  
+**Usage**:  
 ```
 baseline_model_result, baseline_metrics = baseline_model(X_train_preprocessed, y_train, X_test_preprocessed, y_test, label_encoder)
 print(baseline_model_result,baseline_metrics)
@@ -296,14 +296,14 @@ def compute_metrics(y_true, y_pred, y_proba, label_encoder):
     }
     return metrics
 ```
-Meaning: Calculates and returns various performance metrics predicted by the model.  
-Input:  
+**Meaning**: Calculates and returns various performance metrics predicted by the model.  
+**Input**:  
 **y_true**: true label array.  
 **y_pred**: predicted label array.  
 **y_proba**: predicted probability array.  
 **label_encoder**: label encoder object, used to convert numerical labels back to original category labels.  
-Output: A dictionary containing various performance metrics.
-Usage:  
+**Output**: A dictionary containing various performance metrics.
+**Usage**:  
 ```
 metrics = compute_metrics(y_test, y_pred, y_proba, label_encoder)
 print(metrics)
@@ -328,13 +328,13 @@ def plot_and_save_roc(y_true, y_proba, label_encoder, filename='roc_curve.png'):
     plt.savefig(os.path.join(output_dir, filename))
     plt.close()
 ```
-Meaning: Plot the ROC curve and save it as an image file.  
-Input:  
+**Meaning**: Plot the ROC curve and save it as an image file.  
+**Input**:  
 **y_true**: true label array.   
 **y_proba**: predicted probability array.  
 **label_encoder**: label encoder object, used to convert numerical labels back to original category labels.  
 **filename**: The filename to save the image to (default is 'roc_curve.png').
-Output: Generate and save ROC curve graphs.
+**Output**: Generate and save ROC curve graphs.
 ```
 plot_and_save_roc(y_test, baseline_model_result.predict_proba(X_test_preprocessed)[:, 1], label_encoder, filename='baseline_roc_curve.png')
 ```
@@ -347,11 +347,11 @@ def optimize_hyperparameters_tpot(X, y):
     print("Hyperparameter optimization with TPOT completed.")
     return tpot.fitted_pipeline_, tpot.fitted_pipeline_.get_params()
 ```
-Meaning: Automatically optimize hyperparameters using TPOT (Tree-based Pipeline Optimization Tool). **TPOT** is an open source Python library that uses genetic algorithms to automatically find the best machine learning pipeline.  
-Input:  
+**Meaning**: Automatically optimize hyperparameters using TPOT (Tree-based Pipeline Optimization Tool). **TPOT** is an open source Python library that uses genetic algorithms to automatically find the best machine learning pipeline.  
+**Input**:  
 **X**: feature matrix.  
 **y**: label array.  
-Output: The optimized pipeline and its hyperparameters.  
+**Output**: The optimized pipeline and its hyperparameters.  
 ```
 optimize_hyperparameters_tpot(X_train_preprocessed, y_train)
 ```
@@ -372,14 +372,13 @@ def optimize_hyperparameters_grid_search(X, y):
     print("Hyperparameter optimization with Grid Search completed.")
     return grid_search.best_estimator_, grid_search.best_params_
 ```
-Meaning: Use Grid Search to optimize the hyperparameters.  
-Input:  Same with optimize_hyperparameters_tpot.
-Output: The best estimator and the best parameter combination.
+**Meaning**: Use Grid Search to optimize the hyperparameters.  
+**Input**:  Same with optimize_hyperparameters_tpot.
+**Output**: The best estimator and the best parameter combination.
+**Usage**
 ```
 optimize_hyperparameters_grid_search(X_train_preprocessed, y_train)
 ```
-### 4.1.14
-
 # 5.Gan
 In Gan fold, we use MolGAN to generated unique vaild molecules.  
 The MolGAN network was initially presented by Cao and Kipf in their work "MolGAN: An implicit generative model for small molecular graphs[[2]](https://arxiv.org/abs/1805.11973)  
