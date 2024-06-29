@@ -190,7 +190,7 @@ def get_important_features(model, feature_names, top_n=5):
 
 # Main function
 def main():
-    csv_file = 'Dataset.csv'
+    csv_file = 'Dataset_Mixed.csv'
     perform_hyperparameter_optimization = True  # Boolean flag to control hyperparameter optimization
     optimization_method = 'grid_search'  # 'tpot' or 'grid_search'
 
