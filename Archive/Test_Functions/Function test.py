@@ -32,9 +32,9 @@ def encode_labels(y):
     y_encoded = le.fit_transform(y)
     return y_encoded, le
 
-# y, label_encoder = encode_labels(df['Type'].values)
-# print(y)
-# print(label_encoder)
+y, label_encoder = encode_labels(df['Type'].values)
+print(y)
+print(label_encoder)
 
 def smiles_to_descriptors(smiles):
     mol = Chem.MolFromSmiles(smiles)
@@ -55,8 +55,8 @@ def apply_descriptors(df):
     print("Descriptor conversion completed.")
     return X, y, smiles, label_encoder
 
-X, y, smiles, label_encoder = apply_descriptors(df)
-print(X,y,smiles,label_encoder)
+# X, y, smiles, label_encoder = apply_descriptors(df)
+# print(X,y,smiles,label_encoder)
 
 def split_data(X, y, smiles):
     print("Splitting data into training and test sets...")
