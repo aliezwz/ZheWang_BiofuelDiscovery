@@ -1,6 +1,20 @@
 # BiofuelDiscovery
 ## 1. Introduction
 In BiofuelDiscovery project, we trained three classifier models using Gaussian processes, random forests, and semi-supervised learning algorithms. We then used the SMILES of biofuels classified by these models to train the GAN model. Finally, we added the unique molecules created by the GAN to the total database and repeated the training cycle.
+## 2. Project Structure
+### 2.1 Datasets Folder
+#### 2.1.1 Seed_Dataset
+**Seed_Dataset.csv** is the original dataset used to train the classifier, which contains the names of molecules, smiles, labels (Types), and descriptors.
+#### 2.1.2 Lotus_Dataset
+The Lotus database is a natural product database that contains a total of 276,518 natural products. This dataset is used to trian Molgan.  
+You can access the [Lotus dataset](https://lotus.naturalproducts.net/) directly.
+#### 2.1.3 Smile_Dataset
+This database contains a large number of SMILES of biofuel molecules and is used to train MolGan to generate new molecules.
+## 2.2 Classifiers Folder
+In Classifiers Folder, we have three classifiers written by different algorithms, namely RF_Classifier.py(Random Forest), GP_Classifier.py(Gaussian Process) and semi-supervised learning classifier(Semi-supervised Learning). 
+### 2.3 Molgans Folder
+### 2.4 Archive Folder
+
 ## 2. Tutorial
 ### 2.1 Prepare the database
 To run BiofuelDiscovery project, firstly you need to prepare a dataset containing biofuel molecules and fossil fuel molecules. Here, we call it "training dataset". This dataset should contains columns for "Name", "Smiles" and "Types". The "Name" column contains the name of the molecule. The "Smiles" column contains the **SMILES**(simplified molecular-input line-entry system) of the molecule, **SMILES** is a specification in the form of a line notation for describing the structure of chemical species using short ASCII strings[[1]](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system), you can search for smiles for each molecule on PubChem or use rdkit to generate smiles.  
