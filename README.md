@@ -36,7 +36,7 @@ Additionally, if you want to know all the libraries needed to run Molgan, please
 [Deepchem tutorials](https://github.com/deepchem/deepchem/blob/master/examples/tutorials/Generating_molecules_with_MolGAN.ipynb)
 ### 3.3 How to 
 In order to run the project, user should follow the following steps:  
-1-Select any model in the Classifier fold and train it using trining database. You will get a trianed modle.  
+1-Select any model in the Classifier fold and train it using **Seed_Dataset**. You will get a trianed modle.  
 2-Use the trained model to classify your dataset. You will get a database with labels "biofuel" and "non-biofuel".  
 3-Save the dataset you used in step 1 and the smiles of the molecules with the label "biofuel" in the newly obtained dataset, and create a new dataset.  
 4-Use SMILES dataset to train MolGAN. The MolGAN will generate more unique and vaild smiles.  
