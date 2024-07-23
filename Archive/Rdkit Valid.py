@@ -17,5 +17,5 @@ def validate_and_draw_smiles(smiles):
         print("The SMILES string is invalid.")
 
 # Example usage
-smiles_string = "COc1ccc2[nH+]ccc2ncc1CC(=O)NCC1"
+smiles_string = "C1=CC=CC=C1"
 validate_and_draw_smiles(smiles_string)

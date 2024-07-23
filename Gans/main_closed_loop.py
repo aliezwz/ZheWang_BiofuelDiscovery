@@ -26,15 +26,15 @@ from MolGAN_loop import (
 
 def main_closed_loop():
     # Configuration
-    rf_csv_file = 'Dataset\\Dataset.csv'
-    lotus_csv = 'Dataset\\Lotus_dataset.csv'
+    rf_csv_file = 'C:\Users\zhe61\OneDrive\Desktop\ZHE WANG-Project 1\ZheWang_BiofuelDiscovery\Classifiers\Dataset.csv'
+    lotus_csv = 'C:\Users\zhe61\OneDrive\Desktop\ZHE WANG-Project 1\ZheWang_BiofuelDiscovery\Dataset\Lotus_dataset.csv'
     molgan_output_dir = 'MolGAN_output'
     num_iterations = 2
     gan_params = {
-        'num_atoms': 12,
-        'epochs': 250,
+        'num_atoms': 15,
+        'epochs': 100,
         'num_samples': 10000,
-        'generator_steps': 0.2,
+        'generator_steps': 0.6,
         'checkpoint_interval': 5000,
     }
 

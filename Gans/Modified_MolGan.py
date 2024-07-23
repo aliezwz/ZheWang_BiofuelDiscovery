@@ -27,11 +27,11 @@ start_time = time.time()
 
 # Read SMILES data
 start_time = time.time()
-df = pd.read_csv("../Dataset/Smiles list.csv")
+df = pd.read_csv("Lotus_dataset_mini.csv")
 end_time = time.time()
 print_time(start_time, end_time, "Reading SMILES list")
 
-num_atoms = 12
+num_atoms = 15
 print(df)
 
 # data = df[['smiles']].sample(4000, random_state=42)
@@ -43,7 +43,7 @@ feat = dc.feat.MolGanFeaturizer(max_atom_count=num_atoms, atom_labels=[0, 5, 6, 
 end_time = time.time()
 print_time(start_time, end_time, "Creating featurizer")
 
-smiles = data['SMILES'].values
+smiles = data['Smile'].values
 
 start_time = time.time()
 filtered_smiles = [x for x in smiles if Chem.MolFromSmiles(x).GetNumAtoms() < num_atoms]
@@ -75,12 +75,12 @@ def iterbatches(epochs):
             yield {gan.data_inputs[0]: adjacency_tensor, gan.data_inputs[1]: node_tensor}
 
 # Train GAN
-gan.fit_gan(iterbatches(25), generator_steps=0.2, checkpoint_interval=5000)
+gan.fit_gan(iterbatches(250), generator_steps=0.2, checkpoint_interval=5000)
 print_time(start_time, end_time, "Training GAN")
 
 # Generate data
 start_time = time.time()
-generated_data = gan.predict_gan_generator(10000)
+generated_data = gan.predict_gan_generator(100000)
 end_time = time.time()
 print_time(start_time, end_time, "Generating data")
 time.sleep(10)

@@ -96,6 +96,7 @@ def apply_descriptors(df):
     print("Applying molecular descriptors...")
     descriptors = df['Smile'].apply(smiles_to_descriptors).apply(pd.Series)
     descriptors.columns = [desc[0] for desc in Descriptors._descList]
+    df = pd.concat([df, descriptors], axis=1)
     y, label_encoder = encode_labels(df['Type'].values)
     smiles = df['Smile'].values  # Store Smile strings
     df['Type'] = label_encoder.inverse_transform(y)  # Add the 'Type' column back to the dataframe
@@ -217,9 +218,9 @@ def plot_and_save_roc(y_true, y_proba, label_encoder, filename='roc_curve.png'):
     plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('Receiver Operating Characteristic')
+    plt.xlabel('False Positive Rate', fontsize = 30)
+    plt.ylabel('True Positive Rate', fontsize = 30)
+    plt.title('Receiver Operating Characteristic', fontsize = 30)
     plt.legend(loc="lower right")
     plt.grid()
     plt.savefig(os.path.join(output_dir, filename))
@@ -272,7 +273,7 @@ def plot_feature_importance(model, feature_names, filename='feature_importance.p
     importances = model.feature_importances_
     indices = np.argsort(importances)[-top_n:][::-1]
     plt.figure()
-    plt.title(f"Top {top_n} Feature Importances")
+    plt.title(f"Top {top_n} Feature Importances", fontsize = 20)
     plt.bar(range(top_n), importances[indices], align="center")
     plt.xticks(range(top_n), [feature_names[i] for i in indices], rotation=90)
     plt.xlim([-1, top_n])
@@ -515,10 +516,10 @@ def correlation_filter(train_df, test_df, selected_features, threshold=0.95):
 
 def handle_infinite_and_normalize(train_df, test_df, feature_columns):
     print("Handling infinite values and normalizing data...")
-    train_df.replace([np.inf, -np.inf], np.finfo(np.float32).max, inplace=True)
-    train_df.fillna(0, inplace=True)
-    test_df.replace([np.inf, -np.inf], np.finfo(np.float32).max, inplace=True)
-    test_df.fillna(0, inplace=True)
+    train_df[feature_columns] = train_df[feature_columns].replace([np.inf, -np.inf], np.finfo(np.float32).max)
+    train_df[feature_columns] = train_df[feature_columns].fillna(0)
+    test_df[feature_columns] = test_df[feature_columns].replace([np.inf, -np.inf], np.finfo(np.float32).max)
+    test_df[feature_columns] = test_df[feature_columns].fillna(0)
 
     scaler = StandardScaler()
     train_df[feature_columns] = scaler.fit_transform(train_df[feature_columns])
@@ -529,55 +530,28 @@ def handle_infinite_and_normalize(train_df, test_df, feature_columns):
 
 def handle_infinite_and_normalize_external(test_df, scaler, feature_columns):
     print("Handling infinite values and normalizing external data...")
-    test_df.replace([np.inf, -np.inf], np.finfo(np.float32).max, inplace=True)
-    test_df.fillna(0, inplace=True)
-
-    missing_features = [col for col in feature_columns if col not in test_df.columns]
-    if missing_features:
-        raise ValueError(f"The following features are missing from the external dataset: {missing_features}")
+    test_df[feature_columns] = test_df[feature_columns].replace([np.inf, -np.inf], np.finfo(np.float32).max)
+    test_df[feature_columns] = test_df[feature_columns].fillna(0)
 
     test_df[feature_columns] = scaler.transform(test_df[feature_columns])
 
+    # Clamp large values to a maximum threshold
+    max_value = np.finfo(np.float32).max / 10  # Using a fraction of the max float32 value to avoid overflow issues
+    test_df[feature_columns] = np.clip(test_df[feature_columns], -max_value, max_value)
+
+    # Debugging: Print problematic values
+    if np.any(np.isinf(test_df[feature_columns].values)):
+        print("Inf values found in external data after normalization:")
+        print(test_df[np.isinf(test_df[feature_columns].values)])
+    if np.any(np.isnan(test_df[feature_columns].values)):
+        print("NaN values found in external data after normalization:")
+        print(test_df[np.isnan(test_df[feature_columns].values)])
+    if np.any(test_df[feature_columns].values > max_value):
+        print("Values too large found in external data after normalization and clamping:")
+        print(test_df[test_df[feature_columns].values > max_value])
+
     print("Normalization completed for external data.")
     return test_df
-
-def predict_external(model, external_df, scaler, feature_columns):
-    print("Starting descriptor application for external data...")
-    assert 'Smile' in external_df.columns, "Smile column is missing in the external dataset"
-
-    descriptors = external_df['Smile'].apply(smiles_to_descriptors).apply(pd.Series)
-    descriptors.columns = [desc[0] for desc in Descriptors._descList]
-
-    print(f"Generated {len(descriptors.columns)} descriptors for external data.")
-    print(f"Feature columns expected: {feature_columns}")
-
-    # Ensure all feature columns are present
-    for col in feature_columns:
-        if col not in descriptors.columns:
-            descriptors[col] = 0  # or some default value
-
-    descriptors = descriptors[feature_columns]
-
-    print(f"Feature columns after selection: {descriptors.columns.tolist()}")
-
-    external_df = pd.concat([external_df, descriptors], axis=1)
-
-    # Preprocess external data
-    external_df_preprocessed = preprocess_data(None, None, None, external_df, None, None, external=True, scaler=scaler, feature_columns=feature_columns)
-
-    print("Making predictions on external data...")
-    y_external_pred = model.predict(external_df_preprocessed[feature_columns])
-    y_external_proba = model.predict_proba(external_df_preprocessed[feature_columns])[:, 1]
-    return y_external_pred, y_external_proba
-
-def compute_and_print_auc(X_train, y_train, X_test, y_test, feature_columns, step_name):
-    model = RandomForestClassifier(random_state=42)
-    model.fit(X_train[feature_columns], y_train)
-    y_proba = model.predict_proba(X_test[feature_columns])[:, 1]
-    fpr, tpr, _ = roc_curve(y_test, y_proba)
-    roc_auc = auc(fpr, tpr)
-    print(f"AUC {step_name}: {roc_auc:.4f}")
-    return fpr, tpr, roc_auc
 
 def preprocess_data(train_df, y_train, smiles_train, test_df, y_test, smiles_test, apply_low_variance=True, apply_correlation_filter=True, normalize=True, remove_outliers=True, external=False, scaler=None, feature_columns=None):
     print("Starting preprocessing...")
@@ -619,6 +593,63 @@ def preprocess_data(train_df, y_train, smiles_train, test_df, y_test, smiles_tes
         print("Feature columns used for external preprocessing:", feature_columns)
         print("Preprocessing completed for external data.")
         return test_df
+
+def compute_and_print_auc(X_train, y_train, X_test, y_test, feature_columns, step_name):
+    model = RandomForestClassifier(random_state=42)
+    model.fit(X_train[feature_columns], y_train)
+    y_proba = model.predict_proba(X_test[feature_columns])[:, 1]
+    fpr, tpr, _ = roc_curve(y_test, y_proba)
+    roc_auc = auc(fpr, tpr)
+    print(f"AUC {step_name}: {roc_auc:.4f}")
+    return fpr, tpr, roc_auc
+
+def save_external_predictions(smiles, predictions, confidences, filename_all='external_predictions_all.xlsx',
+                              filename_high_conf='external_predictions_high_conf.xlsx', confidence_threshold=0.8):
+    # Create a DataFrame with SMILES, predictions, and confidences
+    df_all = pd.DataFrame({
+        'Smile': smiles,
+        'Prediction': predictions,
+        'Confidence': confidences
+    })
+
+    # Save all predictions
+    df_all.to_excel(os.path.join(output_dir, filename_all), index=False)
+
+    # Filter and save high confidence predictions
+    df_high_conf = df_all[df_all['Confidence'] > confidence_threshold]
+    df_high_conf.to_excel(os.path.join(output_dir, filename_high_conf), index=False)
+
+def predict_external(model, external_df, scaler, feature_columns, confidence_threshold):
+    print("Starting descriptor application for external data...")
+    assert 'Smile' in external_df.columns, "Smile column is missing in the external dataset"
+
+    descriptors = external_df['Smile'].apply(smiles_to_descriptors).apply(pd.Series)
+    descriptors.columns = [desc[0] for desc in Descriptors._descList]
+
+    print(f"Generated {len(descriptors.columns)} descriptors for external data.")
+    print(f"Feature columns expected: {feature_columns}")
+
+    # Ensure all feature columns are present
+    for col in feature_columns:
+        if col not in descriptors.columns:
+            descriptors[col] = 0  # or some default value
+
+    descriptors = descriptors[feature_columns]
+
+    print(f"Feature columns after selection: {descriptors.columns.tolist()}")
+
+    external_df = pd.concat([external_df, descriptors], axis=1)
+
+    # Preprocess external data
+    external_df_preprocessed = handle_infinite_and_normalize_external(external_df, scaler, feature_columns)
+
+    print("Making predictions on external data...")
+    y_external_pred = model.predict(external_df_preprocessed[feature_columns])
+    y_external_proba = model.predict_proba(external_df_preprocessed[feature_columns])[:, 1]
+
+    save_external_predictions(external_df['Smile'], y_external_pred, y_external_proba, confidence_threshold=confidence_threshold)
+
+    return y_external_pred, y_external_proba
 
 def classifier_core(df, lotus_and_generated_smiles, perform_hyperparameter_optimization=False, optimization_method='grid_search',
                     plot_learning_curves=False, apply_acp_flag=False, apply_low_variance=True, apply_correlation_filter=True, normalize=True,
@@ -715,7 +746,7 @@ def classifier_core(df, lotus_and_generated_smiles, perform_hyperparameter_optim
         plot_learning_curve(best_model, 'Learning Curve', train_df[feature_columns], y_train, cv=5, filename='learning_curve.png')
 
     print("Predicting on external dataset...")
-    external_predictions, external_proba = predict_external(best_model, lotus_and_generated_smiles, scaler, feature_columns)
+    external_predictions, external_proba = predict_external(best_model, lotus_and_generated_smiles, scaler, feature_columns, confidence_threshold)
 
     high_confidence_indices = external_proba > confidence_threshold
     high_confidence_smiles = lotus_and_generated_smiles[high_confidence_indices]
@@ -738,7 +769,7 @@ def classifier_core(df, lotus_and_generated_smiles, perform_hyperparameter_optim
     return high_confidence_smiles
 
 def main():
-    csv_file = 'Dataset.csv'
+    csv_file = 'Dataset_edit.csv'
     perform_hyperparameter_optimization = False
     optimization_method = 'hyperopt'
     plot_learning_curves = True
@@ -747,16 +778,19 @@ def main():
     apply_correlation_filter = True
     normalize = True
     remove_outliers = False
+    confidence_threshold = 0.7  # Set confidence threshold
 
     print("Reading dataset...")
     df = read_data(csv_file)
     print("Reading external dataset...")
-    lotus_csv = "..\\Dataset\\Lotus_dataset.csv"
+    lotus_csv = "Lotus_dataset.csv"
     lotus_and_generated_smiles = pd.read_csv(lotus_csv)
     print("Starting classifier core function...")
     biofuel_smiles = classifier_core(df, lotus_and_generated_smiles, perform_hyperparameter_optimization, optimization_method,
-                                     plot_learning_curves, apply_acp_flag, apply_low_variance, apply_correlation_filter, normalize, remove_outliers)
+                                     plot_learning_curves, apply_acp_flag, apply_low_variance, apply_correlation_filter, normalize, remove_outliers,
+                                     confidence_threshold)
     print("Biofuel SMILES:", biofuel_smiles)
 
 if __name__ == "__main__":
     main()
+
