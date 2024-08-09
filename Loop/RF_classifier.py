@@ -360,7 +360,7 @@ def plot_calibration_curve(y_true, y_proba, filename='calibration_curve.png'):
     plt.close()
 
 def plot_calibration_curve_with_isotonic(y_true, y_proba, filename_before='calibration_curve_before.png', filename_after='calibration_curve_after.png'):
-    """Plot and save calibration curve before and after applying isotonic regression."""
+    """Plot and save calibration curve before and after applying ."""
     ir = IsotonicRegression(out_of_bounds='clip')
     y_proba_isotonic = ir.fit_transform(y_proba, y_true)
 
@@ -926,7 +926,7 @@ def classifier_core(df, lotus_and_generated_smiles, perform_hyperparameter_optim
     return high_confidence_smiles, final_metrics
 
 def main():
-    csv_file = 'Dataset_edit.csv' #'seed_dataset_Xiqi.csv'
+    csv_file = 'Seed Dataset.csv'
     perform_hyperparameter_optimization = False
     optimization_method = 'hyperopt'
     plot_learning_curves = True

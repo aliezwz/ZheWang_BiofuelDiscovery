@@ -95,10 +95,10 @@ def plot_descriptor_distribution(descriptors, output_dir, bins=10):
 
 def main_closed_loop():
     # Configuration
-    rf_csv_file = 'Dataset_edit.csv'
-    lotus_csv = 'Lotus_dataset_mini.csv'
+    rf_csv_file = 'Seed Dataset.csv'
+    lotus_csv = 'Lotus_dataset.csv'
     molgan_output_dir = 'MolGAN_output'
-    num_iterations = 5
+    num_iterations = 3
     gan_params = {
         'num_atoms': 15,
         'epochs': 2000,
@@ -106,7 +106,7 @@ def main_closed_loop():
         'generator_steps': 0.2,
         'checkpoint_interval': 5000,
     }
-    confidence_threshold = 0.66
+    confidence_threshold = 0.5
 
     df = read_data(rf_csv_file)
     lotus_and_generated_smiles = pd.read_csv(lotus_csv)
