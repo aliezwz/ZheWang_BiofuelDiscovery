@@ -1,3 +1,3 @@
 total_molecules: 0
 unique_molecules: 0
-iteration_time: 607.7246043682098
+iteration_time: 345.75714349746704

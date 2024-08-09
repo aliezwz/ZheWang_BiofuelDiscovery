@@ -22,7 +22,7 @@ def print_time(start, end, task_name):
 # Function to read SMILES data
 def read_smiles(file_path):
     df = pd.read_csv(file_path)
-    return df['SMILES'].values
+    return df['Smile'].values
 
 
 # Function to create featurizer
